@@ -1,0 +1,14 @@
+[Unit]
+Description=Run generate_index script
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=webgen
+Group=webgen
+ExecStart=/var/lib/webgen/bin/generate_index
+# Location of script to be executed
+
+[Install]
+WantedBy=multi-user.target
