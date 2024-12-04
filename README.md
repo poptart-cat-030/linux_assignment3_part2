@@ -1,8 +1,8 @@
-Hi, I'm Hillary. This repository will allow you to set up a load balancer that will distribute traffic across 2 nginx servers (web servers) running on 2 Droplets (Virtual machines from Digital Ocean).
+Hi, I'm Hillary. This repository will allow you to set up a load balancer that will distribute traffic across 2 nginx servers (web servers) running on 2 Droplets (virtual machines from Digital Ocean).
 
 ## Table of Contents
 > [!Note] 
-> After **2. Creating a Load Balancer**, complete all remaining instruction sections for each droplet. Please complete the instructions in order.
+> After 2. Creating a Load Balancer, **complete sections 3-9 for each droplet**. Please complete the instructions in order.
 
 - [Table of Contents](#table-of-contents)
 - [1. Creating Droplets](#1-creating-droplets)
