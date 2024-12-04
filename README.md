@@ -1,17 +1,104 @@
-# linux_assignment3
-Assignment 3 for ACIT 2420 (Linux System Administration)
+## Introduction
+Hi, I'm Hillary. This repository will allow you to set up a
 
-## Introduction 
+## Table of Contents
+>[!Note] After section 2, complete all remaining instruction sections for each droplet
+1. [[#Creating Droplets (Virtual Machines)]]
+2. [[#Creating a Load Balancer]]
+3. [[#Connecting to and setting up the Droplet]]
+4. [[#Creating a system user]]
+5. [[#Moving files and creating directories]]
+6. [[#Setting permissions]]
+7. [[#Starting and enabling timers and services]]
+8. [[#Configuring server with nginx]]
+9. [[#Setting up UFW]]
+10. ==[[#Updating server configuration to include a file server]]==
 
-Hi, I'm Hillary. This repository will allow you to set up a nginx web server that will serve an HTML document containing the current date and my system information.
-<br>
-The server also has an uncomplicated firewall (UFW) to help secure it.
+## Creating Droplets (Virtual Machines)
+
+1. Go to DigitalOcean and click on the **Create** button on the navigation bar
+2. Select **Droplet**
+![create droplet](./README-images/create-droplet.png)
+
+Follow the default process for creating a droplet. All you need to change for this project is:
+- Change the region to San Francisco
+- Change the datacenter location to Datacenter 3 - SFO3
+- Use a custom Arch Linux image (newest one available)
+- Ensure an SSH key suitable for this purpose is selected
+- Change droplet quantity to 2 since we are creating 2 droplets
+- In Tags, create a web tag by typing "web"
+![droplet tags](./README-images/droplet-tags.png)
+- (Optional) Give your droplets appropriate names. 
+We'll be naming our droplets "arch1" and "arch2"
+
+3. Click **Create Droplet**
+
+## Creating a Load Balancer
+
+1. Go to DigitalOcean and click on the **Create** button on the navigation bar
+2. Select **Load Balancers**
+![create load balancer](./README-images/create-load-balancer.png)
+
+You can leave most of the default settings alone. All you need to change for this project is:
+- Select San Francisco data center region 3
+![load balancer data region - SF3](./README-images/load-balancer-data-region.png)
+
+- Under Connect Droplets, type "web"
+![load balancer tag - web](./README-images/loadbalancer-tags.png)
+- (Optional) Give your load balancer an appropriate name. 
+We'll be naming our load balancer "assignment3-load-balancer"
+
+3. Click **Create Load Balancer**
+
+## Connecting to and setting up the Droplet
+
+1. Connect to droplet using:
+```
+ssh -i path\to\private-key user@ip-address
+```
+
+- `ssh` is the command we're using to connect to the droplet
+	- `ssh` stands for secure shell
+	- `-i` is a flag used to specify your identity file, for which `path\to\private-key` is the location of your private key
+	- `ip-address` is the IP address of the droplet you want to connect to
+	- `user` is the user belonging to the server that you want to connect as
+		- The default user for the Arch Linux distro is `arch`
+
+2.  Ensure your droplet's system is up to date by running:
+```bash
+sudo pacman -Syu
+```
+
+3. Reboot the droplet's system using:
+>[!Warning]
+>Running this command will kick you out of your droplet. Follow step 1 again to reconnect to your droplet, although you will be unable to reconnect immediately.
+
+```bash
+sudo systemctl reboot
+```
+
+4. Download the following packages using the command below the table for each package:
+
+| Package           | Purpose                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `git`             | to download all the files and directories from this repository |
+| `neovim`          | to edit text in files                                          |
+| `tree` (optional) | to display file structure                                      |
+```bash
+sudo pacman -Syu package-name
+```
+- where `package-name` is the name of one of the packages specified above
+
+5. Copy all the files and directories from this repository using:
+```bash
+git clone https://github.com/poptart-cat-030/linux_assignment3.git
+```
 
 ## Creating a system user
 
 Run the following command:
 ```bash
-useradd -r -m -d /var/lib/webgen -s /usr/bin/nologin webgen
+sudo useradd -r -m -d /var/lib/webgen -s /usr/bin/nologin webgen
 ```
 - `-r` flag is for making a system user
 - `-m` flag is for creating the home directory
@@ -47,16 +134,34 @@ sudo mkdir /var/lib/webgen/HTML
 ```
 The `HTML` directory will store the html that will be created when the `generate_index` file is ran
 
+7. Locate the `documents` directory from this repository
+8. Move the `documents` directory and all the files within it into `/var/lib/webgen` with
+```bash
+sudo mv documents /var/lib/webgen
+```
+The `documents` directory contains 2 test files that contain some text
+<br>
+If you have installed `tree`, check the file structure of the `/var/lib/webgen/` directory using:
+```bash
+sudo tree /var/lib/webgen/
+```
+
+>[!Note]
+>At this point in the tutorial, you will not see an index.html file until you complete the steps in section 7: [[#Starting and enabling timers and services]]
+
+The file structure of your `webgen` directory should look something like this:
+![webgen file structure](./README-images/webgen-file-structure.png)
+
 ## Setting permissions
 
 1. Make the user `webgen` have full permissions to its home directory and all the files within:
 ```bash
-chown -R webgen:webgen /var/lib/webgen
+sudo chown -R webgen:webgen /var/lib/webgen
 ```
 
 2. Add execute permissions to the `generate_index` script:
 ```bash
-chmod +x /var/lib/webgen/bin/generate_index
+sudo chmod +x /var/lib/webgen/bin/generate_index
 ```
 
 ## Starting and enabling timers and services
@@ -126,7 +231,7 @@ sudo mv server-block.conf /etc/nginx/sites-available
 
 9. Create a symbolic link to `/etc/nginx/sites-available/server-block.conf`:
 ```bash
-ln -s /etc/nginx/sites-available/server-block.conf /etc/nginx/sites-enabled/server-block.conf
+sudo ln -s /etc/nginx/sites-available/server-block.conf /etc/nginx/sites-enabled/server-block.conf
 ```
 
 10. Run the following command:
@@ -164,24 +269,26 @@ It's important to use a separate server block file instead of modifying the main
 sudo pacman -S ufw
 ```
 
-2. Enable `ufw.service` to start upon booting:
+2. Start `ufw.service` and enable it to start upon booting:
 ```bash
-sudo systemctl enable ufw.service
+sudo systemctl enable --now ufw.service
 ```
 
 3. Add the following rules to the firewall by running the following commands:
 ```bash
 sudo ufw allow ssh
-# allows ssh connection
 ```
+Allows ssh connection
+
 ```bash
 sudo ufw allow http
-# allows http connection
 ```
+Allows http connection
+
 ```bash
 sudo ufw limit ssh
-# sets rate limit on ssh for security purposes
 ```
+Sets rate limit on ssh for security purposes
 
 4. Enable the firewall (`ufw`):
 >[!warning]
@@ -196,3 +303,7 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
+## Updating server configuration to include a file server!
+
+ ==Visit `droplet-ip-address/documents` in the browser, where `droplet-ip-address` is the IP address of that droplet==
+==You should see a list of the documents from the `documents` directory of the droplet==
