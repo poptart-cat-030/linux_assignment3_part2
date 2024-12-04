@@ -315,10 +315,10 @@ At `droplet-ip-address` you should see something like: <br>
 <br>
 At `droplet-ip-address/documents` you should see something like: <br>
 ![file server documents](./README-images/file-server-documents.png) <br>
-These are a list of the files (the test files from this repository) sourced from the `documents` directory of that droplet
+This is a list of the files (the test files from this repository) sourced from the `documents` directory of that droplet
 
-1. Repeat this for the second droplet to check if it's working correctly
-2. Visit `load-balancer-ip-address` and `load-balancer-ip-address/documents` in the browser
+2. Repeat this for the second droplet to check if it's working correctly
+3. Visit `load-balancer-ip-address` and `load-balancer-ip-address/documents` in the browser
 - Where `load-balancer-ip-address` is the IP address of your load balancer
   
 You should see something similar to what you saw in step 1. However, if you keep refreshing the page on  `load-balancer-ip-address`, you should see the IP address change because your load balancer is directing you to either one of the servers on the droplets.
