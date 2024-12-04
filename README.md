@@ -1,7 +1,8 @@
-Hi, I'm Hillary. This repository will allow you to set up a
+Hi, I'm Hillary. This repository will allow you to set up a load balancer that will distribute traffic across 2 nginx servers (web servers) running on 2 Droplets (Virtual machines from Digital Ocean).
 
 ## Table of Contents
->[!Note] After section 2, complete all remaining instruction sections for each droplet
+> [!Note] 
+> After **2. Creating a Load Balancer**, complete all remaining instruction sections for each droplet. Please complete the instructions in order.
 
 - [Table of Contents](#table-of-contents)
 - [1. Creating Droplets](#1-creating-droplets)
@@ -13,7 +14,7 @@ Hi, I'm Hillary. This repository will allow you to set up a
 - [7. Starting and enabling timers and services](#7-starting-and-enabling-timers-and-services)
 - [8. Configuring server with nginx](#8-configuring-server-with-nginx)
 - [9. Setting up UFW](#9-setting-up-ufw)
-- [10. Updating server configuration to include a file server!](#10-updating-server-configuration-to-include-a-file-server)
+- [10. Checking that everything works](#10-checking-that-everything-works)
 
 ## 1. Creating Droplets
 
@@ -140,7 +141,7 @@ The `HTML` directory will store the html that will be created when the `generate
 ```bash
 sudo mv documents /var/lib/webgen
 ```
-The `documents` directory contains 2 test files that contain some text
+The `documents` directory contains 2 test files, each containing some text, that we'll be able to download from the server at the end of this tutorial.
 <br>
 If you have installed `tree`, check the file structure of the `/var/lib/webgen/` directory using:
 ```bash
@@ -148,7 +149,7 @@ sudo tree /var/lib/webgen/
 ```
 
 >[!Note]
->At this point in the tutorial, you will not see an index.html file until you complete the steps in section 7: [[#Starting and enabling timers and services]]
+>At this point in the tutorial, you will not see an index.html file until you complete the steps from **7. Starting and enabling timers and services**
 
 The file structure of your `webgen` directory should look something like this: <br>
 ![webgen file structure](./README-images/webgen-file-structure.png)
@@ -304,7 +305,20 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
-## 10. Updating server configuration to include a file server!
+## 10. Checking that everything works
 
- ==Visit `droplet-ip-address/documents` in the browser, where `droplet-ip-address` is the IP address of that droplet==
-==You should see a list of the documents from the `documents` directory of the droplet==
+1. Visit `droplet-ip-address` and `droplet-ip-address/documents`  in the browser
+ - Where `droplet-ip-address` is the IP address of that droplet
+  
+At `droplet-ip-address` you should see something like: <br>
+![droplet system information](./README-images/droplet-system-info.png)
+<br>
+At `droplet-ip-address/documents` you should see something like: <br>
+![file server documents](./README-images/file-server-documents.png) <br>
+These are a list of the files (the test files from this repository) sourced from the `documents` directory of that droplet
+
+1. Repeat this for the second droplet to check if it's working correctly
+2. Visit `load-balancer-ip-address` and `load-balancer-ip-address/documents` in the browser
+- Where `load-balancer-ip-address` is the IP address of your load balancer
+  
+You should see something similar to what you saw in step 1. However, if you keep refreshing the page on  `load-balancer-ip-address`, you should see the IP address change because your load balancer is directing you to either one of the servers on the droplets.
