@@ -89,7 +89,11 @@ sudo systemctl reboot
 ```bash
 sudo pacman -Syu package-name
 ```
-- where `package-name` is the name of one of the packages specified above
+
+- `S` is for synchronizing packages and downloading the package and its dependencies
+- `y` is for refresh which will download a fresh copy of the master package databases
+- `u` is for upgrading all packages that are out-of-date
+-  `package-name` is the name of one of the packages specified above
 
 5. Copy all the files and directories from this repository using:
 ```bash
@@ -168,23 +172,23 @@ sudo chmod +x /var/lib/webgen/bin/generate_index
 
 ## 7. Starting and enabling timers and services
 
-1. Run the following command:
+1. To make systemd aware of any changes to service files, run the command:
 ```bash
 sudo systemctl daemon-reload
 ```
 
-2. Start `generate-index.timer`:
+1. Start `generate-index.timer`:
 ```bash
 sudo systemctl start generate-index.timer
 ```
 
-3. Test that `generate-index.timer` is active:
+1. Test that `generate-index.timer` is active:
 ```bash
 sudo systemctl list-timers
 ```
 You should see a `generate-index.timer` in the resulting list
 
-4. Test if `generate-index.service` is able to run:
+1. Test if `generate-index.service` is able to run:
 ```bash
 sudo systemctl status generate-index.service
 ```
