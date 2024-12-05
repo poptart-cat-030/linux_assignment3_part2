@@ -177,18 +177,18 @@ sudo chmod +x /var/lib/webgen/bin/generate_index
 sudo systemctl daemon-reload
 ```
 
-1. Start `generate-index.timer`:
+2. Start `generate-index.timer`:
 ```bash
 sudo systemctl start generate-index.timer
 ```
 
-1. Test that `generate-index.timer` is active:
+3. Test that `generate-index.timer` is active:
 ```bash
 sudo systemctl list-timers
 ```
 You should see a `generate-index.timer` in the resulting list
 
-1. Test if `generate-index.service` is able to run:
+4. Test if `generate-index.service` is able to run:
 ```bash
 sudo systemctl status generate-index.service
 ```
